@@ -9,6 +9,11 @@ chrome.action.onClicked.addListener((tab) => {
     });
 });
 
+// 키보드 이벤트 리스너
+chrome.commands.onCommand.addListener((command) => {
+    console.log(`Command "${command}" triggered`);
+});
+
 // 새로고침 이벤트 리스너
 chrome.tabs.onActivated.addListener(() => {
     chrome.storage.local.get("isEnabled", (res) => {
