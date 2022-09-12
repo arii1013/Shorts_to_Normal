@@ -14,11 +14,16 @@
         "service_worker": "background.js"
     },
     "commands": {
-        "inject-script": {
-            "suggested_key": "Ctrl+Down",
-            "description": "Inject a script on the page"
+        "toggle": {
+            "suggested_key": "Alt+Q",
+            "description": "toggle this extension"
         }
     },
 
-    "permissions": ["scripting", "tabs", "activeTab", "storage"]
+    "permissions": [
+        "scripting",
+        "tabs",
+        "activeTab",
+        "storage"
+    ]
 }
