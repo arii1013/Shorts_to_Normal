@@ -20,7 +20,7 @@ function reDirect(url) {
 
 // 다음 컨텐츠
 function go(p) {
-    document.querySelector('button[aria-label="다음 동영상"]').click();
+    document.querySelectorAll("ytd-button-renderer.ytd-shorts  button#button.yt-icon-button")[p].click();
 }
 
 // 키보드 이벤트 리스너
@@ -43,14 +43,11 @@ chrome.commands.onCommand.addListener((command) => {
             })
         });
     }
-
-    // 
-    // ALT+A
-    // ALT+S
+    // ALT+A or ALT+S
     else {
         let p;
         if (command === "next") p = 1;
-        else if (command === "prev") p = -1;
+        else if (command === "prev") p = 0;
 
         chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
             
