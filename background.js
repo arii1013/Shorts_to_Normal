@@ -1,27 +1,29 @@
-// 클릭 이벤트 리스너
-// chrome.action.onClicked.addListener((tab) => {
-//     chrome.storage.local.get("isEnabled", (res) => {
-//         let isEnabled = !res.isEnabled;
-//         let text = isEnabled ? "ON" : "OFF";
-
-//         chrome.action.setBadgeText({ text: text })
-//         chrome.storage.local.set({ "isEnabled": isEnabled });
-//     });
-// });
-
 // URL 상수
 const shortsurl = "https://www.youtube.com/shorts/";
 const normalurl = "https://www.youtube.com/watch?v=";
 
-// 리다이렉트
+// ALT+Q 리다이렉트
 function reDirect(url) {
     document.location.href = url;
 }
 
-// 다음 컨텐츠
-function go(p) {
-    document.querySelectorAll("ytd-button-renderer.ytd-shorts  button#button.yt-icon-button")[p].click();
+// 컨텐츠 index
+let page = 0;
+// ALT+W 컨텐츠 차단
+function block() {
+    const dislike = document.querySelectorAll("ytd-toggle-button-renderer#dislike-button")[page];
+    if (dislike) dislike.click();
+
+    const dontrecomm = document.querySelectorAll("ytd-menu-service-item-renderer.ytd-menu-popup-renderer")[1];
+    if (dontrecomm) dontrecomm.click();
 }
+
+// ALT+A or ALT+S 다음 컨텐츠
+function go(p) {
+    const btn = document.querySelectorAll("ytd-button-renderer.ytd-shorts  button#button.yt-icon-button")[p];
+    if (btn) btn.click();
+}
+
 
 // 키보드 이벤트 리스너
 chrome.commands.onCommand.addListener((command) => {
@@ -34,6 +36,7 @@ chrome.commands.onCommand.addListener((command) => {
                 url = url.replace(shortsurl, normalurl);
             } else if (url.startsWith(normalurl)) {
                 url = url.replace(normalurl, shortsurl);
+                page = 0;
             }
             
             chrome.scripting.executeScript({
@@ -43,14 +46,29 @@ chrome.commands.onCommand.addListener((command) => {
             })
         });
     }
+    // ALT+W
+    else if (command == "block") {
+        chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+            chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: block
+            })
+        });
+    }
     // ALT+A or ALT+S
     else {
         let p;
-        if (command === "next") p = 1;
-        else if (command === "prev") p = 0;
+        if (command === "next") {
+            p = 1;
+            page += 1;
+        } else if (command === "prev") {
+            p = 0;
+            page -= 1;
+        }
+
+        console.log(page);
 
         chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-            
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
                 func: go,
@@ -59,20 +77,3 @@ chrome.commands.onCommand.addListener((command) => {
         });
     }
 });
-
-
-// 새로고침 이벤트 리스너
-// chrome.tabs.onActivated.addListener(() => {
-//     chrome.storage.local.get("isEnabled", (res) => {
-//         let isEnabled = res.isEnabled;
-//         let text = isEnabled ? "ON" : "OFF";
-
-//         chrome.action.setBadgeText({ text: text })
-//         chrome.storage.local.set({ "isEnabled": isEnabled });
-//     });
-// });
-
-// 크롬 익스텐션 처음 설치했을 때
-// chrome.runtime.onInstalled.addListener(() => {
-//     chrome.storage.local.set({ "isEnabled": true });
-// });
