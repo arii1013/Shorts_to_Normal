@@ -9,19 +9,26 @@
 //     });
 // });
 
+// URL 상수
+const shortsurl = "https://www.youtube.com/shorts/";
+const normalurl = "https://www.youtube.com/watch?v=";
+
 // 리다이렉트
-function redirect(url) {
+function reDirect(url) {
     document.location.href = url;
+}
+
+// 다음 컨텐츠
+function go(p) {
+    document.querySelector('button[aria-label="다음 동영상"]').click();
 }
 
 // 키보드 이벤트 리스너
 chrome.commands.onCommand.addListener((command) => {
-    console.log(`${command}`);
+    // ALT+Q
     if (command === "toggle") {
         chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
             let url = tabs[0].url;
-            const shortsurl = "https://www.youtube.com/shorts/";
-            const normalurl = "https://www.youtube.com/watch?v=";
             
             if (url.startsWith(shortsurl)) {
                 url = url.replace(shortsurl, normalurl);
@@ -31,8 +38,26 @@ chrome.commands.onCommand.addListener((command) => {
             
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
-                func: redirect,
+                func: reDirect,
                 args: [url]
+            })
+        });
+    }
+
+    // 
+    // ALT+A
+    // ALT+S
+    else {
+        let p;
+        if (command === "next") p = 1;
+        else if (command === "prev") p = -1;
+
+        chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+            
+            chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: go,
+                args: [p]
             })
         });
     }

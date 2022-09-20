@@ -16,7 +16,15 @@
     "commands": {
         "toggle": {
             "suggested_key": "Alt+Q",
-            "description": "toggle this extension"
+            "description": "toggle modes of the shorts and the normal"
+        },
+        "prev": {
+            "suggested_key": "Alt+A",
+            "description": "skip the content either shorts or normal"
+        },
+        "next": {
+            "suggested_key": "Alt+S",
+            "description": "skip the content either shorts or normal"
         }
     },
 
