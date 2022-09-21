@@ -1,23 +1,29 @@
 // ALT+Q 리다이렉트
 function reDirect() {
-    const shortsurl = "https://www.youtube.com/shorts/";
-    const normalurl = "https://www.youtube.com/watch?v=";
+    const SHORTSURL = "https://www.youtube.com/shorts/";
+    const NORMALURL = "https://www.youtube.com/watch?v=";
     let url = document.location.href;
 
-    if (url.startsWith(shortsurl)) url = url.replace(shortsurl, normalurl);
-    else if (url.startsWith(normalurl)) url = url.replace(normalurl, shortsurl);
+    if (url.startsWith(SHORTSURL)) url = url.replace(SHORTSURL, NORMALURL);
+    else if (url.startsWith(NORMALURL)) url = url.replace(NORMALURL, SHORTSURL);
 
     document.location.href = url;
 }
 
 // ALT+W 컨텐츠 차단
 function block() {
-    let uid = document.location.href;
-    const shortsurl = "https://www.youtube.com/shorts/";
-    if (!uid.startsWith(shortsurl)) return;
-    uid = uid.replace(shortsurl, "");
+    // 한정자
+    const SHORTSURL = "https://www.youtube.com/shorts/";
+    const CONTENTS = "ytd-reel-video-renderer.ytd-shorts div#player-container";
+    const DISLIKES = "ytd-toggle-button-renderer#dislike-button tp-yt-paper-button#button.ytd-toggle-button-renderer";
+    const DONTRECOMMPANEL = "ytd-reel-player-overlay-renderer div#actions div#menu ytd-menu-renderer yt-icon-button";
+    const DONTRECOMM = "ytd-menu-service-item-renderer.ytd-menu-popup-renderer";
 
-    const contents = document.querySelectorAll("ytd-reel-video-renderer.ytd-shorts div#player-container");
+    let uid = document.location.href;
+    if (!uid.startsWith(SHORTSURL)) return;
+    uid = uid.replace(SHORTSURL, "");
+
+    const contents = document.querySelectorAll(CONTENTS);
     let index = 0;
     for (let i=1; i<contents.length; i++) {
         let contents_uid = contents[i].getAttribute("style");
@@ -25,13 +31,13 @@ function block() {
         if (contents_uid === uid) index = i;
     }
 
-    console.log(index);
+    const dislike = document.querySelectorAll(DISLIKES)[index];
+    if (dislike) dislike.click();
 
-    // const dislike = document.querySelectorAll("ytd-toggle-button-renderer#dislike-button tp-yt-paper-button#button.ytd-toggle-button-renderer")[page];
-    // if (dislike) dislike.click();
-
-    // const dontrecomm = document.querySelectorAll("ytd-reel-player-overlay-renderer div#actions div#menu ytd-menu-renderer yt-icon-button")[page];
-    // if (dontrecomm) dontrecomm.click();
+    let dontrecomm = document.querySelectorAll(DONTRECOMMPANEL)[index];
+    if (dontrecomm) dontrecomm.click();
+    dontrecomm = document.querySelectorAll(DONTRECOMM)[1];
+    if (dontrecomm) dontrecomm.click();
 }
 
 // ALT+A or ALT+S 다음 컨텐츠
