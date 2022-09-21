@@ -20,6 +20,7 @@ function block() {
     const DISLIKES = "ytd-toggle-button-renderer#dislike-button tp-yt-paper-button#button.ytd-toggle-button-renderer";
     const DONTRECOMMPANEL = "ytd-reel-player-overlay-renderer div#actions div#menu ytd-menu-renderer yt-icon-button";
     const DONTRECOMM = "ytd-menu-service-item-renderer.ytd-menu-popup-renderer";
+    const NEXTBTN = "ytd-button-renderer.ytd-shorts button#button.yt-icon-button";
 
     // get your current url and check whether its shorts url
     let uid = document.location.href;
@@ -45,11 +46,15 @@ function block() {
     if (dontrecomm) dontrecomm.click();
     dontrecomm = document.querySelectorAll(DONTRECOMM)[1];
     if (dontrecomm) dontrecomm.click();
+
+    // get next contents
+    const nextbtn = document.querySelectorAll(NEXTBTN)[1];
+    if (nextbtn) nextbtn.click();
 }
 
 // Get next contents (ALT+A or ALT+S)
 function go(p) {
-    const btn = document.querySelectorAll("ytd-button-renderer.ytd-shorts  button#button.yt-icon-button")[p];
+    const btn = document.querySelectorAll("ytd-button-renderer.ytd-shorts button#button.yt-icon-button")[p];
     if (btn) btn.click();
 }
 
@@ -60,7 +65,7 @@ chrome.commands.onCommand.addListener((command) => {
         chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
-                func: reDirect,
+                func: reDirect
             })
         });
     }
